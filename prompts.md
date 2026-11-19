@@ -69,8 +69,13 @@ checks/results"], "limitations":["remaining uncertainties"], "a0_usable":true,
 "a1_usable":true, "baseline_sound":true, "scope_preserved":true,
 "constraints_preserved":true, "meaningful_improvement":true,
 "important_regression":false}. Use actual booleans reflecting your findings.
-Acceptance requires every positive condition and no important regression. If A0
-is unusable, say so even if rejecting A1. Do not repair the candidate yourself.
+baseline_sound describes A0 correctness and must agree with a0_usable.
+Acceptance requires usable A1, preserved scope and constraints, meaningful
+improvement, and no important regression. If A0 is unusable, set both baseline
+fields false; accept A1 only if its existing changes fix the identified failures
+and supply repair_evidence as nonempty text describing those failures and the
+specific verification establishing their resolution. Otherwise reject. Say A0 is
+unusable even when rejecting A1. Do not repair the candidate yourself.
 ```
 <!-- /template:review -->
 

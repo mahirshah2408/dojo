@@ -104,8 +104,9 @@ no fixed idea quota, and an idea may remain unused for the entire run.
 
 A defender may make one coherent optional candidate A1. An independent reviewer
 compares complete A0/A1, prior accepted work, defense, and diff. Acceptance needs
-verified benefit, preserved constraints, sound baseline, and no important
-regression. Tie, uncertainty, rejection, or exhausted review retries retain usable
+verified benefit, preserved constraints, and no important regression. Baseline
+soundness must agree with A0 usability. If A0 is unusable, acceptance additionally
+requires explicit evidence verifying that A1 fixes its identified failures. Tie, uncertainty, rejection, or exhausted review retries retain usable
 A0. No candidate repair loop. The normal judge sees exactly the accepted version.
 
 Retire only with supported disproof, adequate duplication, or supersession that

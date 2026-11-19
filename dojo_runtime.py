@@ -273,6 +273,7 @@ def apply_result(state, value, body):
         if kind == "final":
             fin = state["final"]
             champ = "x" if fin["X"] == "champion" else "y"
+            state["solutions"][state["agents"][state["champion"]]["solution_version"]]["usable"] &= not body["scores"][champ]["fatal"]
             fin["result"] = {"better": fin[winner.upper()], "champion_total": totals[champ],
                              "baseline_total": totals["y" if champ == "x" else "x"],
                              "reason": body["reason"], "fixed": body.get("fixed", [])}
@@ -520,8 +521,8 @@ def apply_candidate(state, value, body):
 
 
 def apply_review(state, value, body):
-    positive = ("a1_usable", "baseline_sound", "scope_preserved", "constraints_preserved", "meaningful_improvement")
-    for key in positive + ("a0_usable", "important_regression"):
+    positive = ("a1_usable", "scope_preserved", "constraints_preserved", "meaningful_improvement")
+    for key in positive + ("baseline_sound", "a0_usable", "important_regression"):
         if type(body.get(key)) is not bool:
             raise p.ProtocolError(key + " must be a boolean")
     for key in ("reason", "benefit"):
@@ -532,6 +533,10 @@ def apply_review(state, value, body):
         raise p.ProtocolError("review decision must be accept or reject")
     if body["decision"] == "accept" and (not all(body[key] for key in positive) or body["important_regression"]):
         raise p.ProtocolError("acceptance contradicts a required guard")
+    if body["baseline_sound"] != body["a0_usable"]:
+        raise p.ProtocolError("baseline_sound must agree with a0_usable")
+    if body["decision"] == "accept" and not body["a0_usable"]:
+        text(body.get("repair_evidence"), "verified A0 repair evidence")
     candidate = state["jobs"][value["match"] + "." + value["agent"] + ".candidate"]
     if body["decision"] == "accept" and any(blocked_idea(state, iid) for iid in candidate["ideas"]):
         raise p.ProtocolError("candidate depends on a blocked idea")
